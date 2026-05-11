@@ -541,8 +541,12 @@ function save() {
 }
 function resetAll() {
   if (!isAdmin()) return;
-  if (confirm('Reset everything? All suggestions, votes, and tasks will be cleared.')) {
+  if (confirm('Reset everything? Suggestions, votes, tasks, and RSVP will be cleared. Wishlist and birthdays are kept.')) {
+    const keepWishlist = data.wishlist || getDefaultData().wishlist;
+    const keepBirthdays = data.birthdays || getDefaultData().birthdays;
     data = getDefaultData();
+    data.wishlist = keepWishlist;
+    data.birthdays = keepBirthdays;
     save();
     renderAll();
   }
@@ -996,15 +1000,14 @@ dataRef.once('value').then((snapshot) => {
   const val = snapshot.val();
   if (val) {
     data = val;
-    // Ensure defaults exist if missing
+    // Only fill in defaults if fields are completely missing (not if they're empty arrays from user clearing)
     const defaults = getDefaultData();
-    if (!data.wishlist || !data.wishlist.length) data.wishlist = defaults.wishlist;
-    if (!data.birthdays || !data.birthdays.length) data.birthdays = defaults.birthdays;
-    if (!data.suggestions) data.suggestions = [];
-    if (!data.tasks) data.tasks = [];
-    if (!data.rsvp) data.rsvp = {};
-    if (!data.availability) data.availability = {};
-    dataRef.set(data);
+    if (!data.hasOwnProperty('wishlist')) data.wishlist = defaults.wishlist;
+    if (!data.hasOwnProperty('birthdays')) data.birthdays = defaults.birthdays;
+    if (!data.hasOwnProperty('suggestions')) data.suggestions = [];
+    if (!data.hasOwnProperty('tasks')) data.tasks = [];
+    if (!data.hasOwnProperty('rsvp')) data.rsvp = {};
+    if (!data.hasOwnProperty('availability')) data.availability = {};
   } else {
     // First time — push defaults to Firebase
     data = getDefaultData();
