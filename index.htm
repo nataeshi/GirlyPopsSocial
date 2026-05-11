@@ -486,7 +486,7 @@
   <footer>
     <p>✨ girly pops social — because group chats aren't enough ✨</p>
     <p style="margin-top:0.5rem;font-size:0.7rem;opacity:0.5;">© 2026 Nataeshia Hall. All rights reserved.</p>
-    <button class="btn btn-sm admin-only" style="margin-top:0.75rem;opacity:0.4;font-size:0.7rem;" onclick="resetAll()">Reset Everything</button>
+    <button class="btn btn-sm admin-only" id="resetBtn" style="display:none;margin-top:0.75rem;opacity:0.4;font-size:0.7rem;" onclick="resetAll()">Reset Everything</button>
   </footer>
 </div>
 
@@ -523,15 +523,15 @@ function getDefaultData() {
     { id: 9, text: 'Axe Throwing', by: 'Nat' },
     { id: 10, text: 'Rage Room', by: 'Nat' },
   ], birthdays: [
-    { name: 'Nat', date: '2000-01-01' },
-    { name: 'Anmol', date: '2000-01-01' },
-    { name: 'Cynthia', date: '2000-01-01' },
-    { name: 'Ayu', date: '2000-01-01' },
-    { name: 'Aska', date: '2000-01-01' },
-    { name: 'Gurjot', date: '2000-01-01' },
-    { name: 'Anjali', date: '2000-01-01' },
-    { name: 'Kayland', date: '2000-01-01' },
-    { name: 'Andrea', date: '2000-01-01' },
+    { name: 'Anmol', date: '2000-02-02' },
+    { name: 'Gurjot', date: '2000-02-07' },
+    { name: 'Cynthia', date: '2000-03-20' },
+    { name: 'Ayu', date: '2000-05-23' },
+    { name: 'Anjali', date: '2000-05-25' },
+    { name: 'Aska', date: '2000-08-16' },
+    { name: 'Kayland', date: '2000-10-04' },
+    { name: 'Andrea', date: '2000-10-10' },
+    { name: 'Taeshia', date: '2000-10-14' },
     { name: 'Mayelie', date: '2000-01-01' },
   ]};
 }
@@ -553,6 +553,7 @@ function resetAll() {
 }
 function renderAll() {
   renderSuggestions(); renderWishlist(); renderTasks(); populateRSVPDropdown(); renderRSVP(); renderDates(); renderBirthdays();
+  updateAdminUI();
 }
 
 // Listen for real-time updates from Firebase
@@ -560,6 +561,11 @@ dataRef.on('value', (snapshot) => {
   const val = snapshot.val();
   if (val) {
     data = val;
+    // Firebase converts arrays to objects — fix them
+    if (data.suggestions && !Array.isArray(data.suggestions)) data.suggestions = Object.values(data.suggestions);
+    if (data.tasks && !Array.isArray(data.tasks)) data.tasks = Object.values(data.tasks);
+    if (data.wishlist && !Array.isArray(data.wishlist)) data.wishlist = Object.values(data.wishlist);
+    if (data.birthdays && !Array.isArray(data.birthdays)) data.birthdays = Object.values(data.birthdays);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     renderAll();
   }
@@ -599,6 +605,12 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     this.classList.add('active');
     document.getElementById(this.dataset.tab).classList.add('active');
+    // Hide reset on wishlist and birthdays
+    const resetBtn = document.getElementById('resetBtn');
+    if (resetBtn) {
+      const tab = this.dataset.tab;
+      resetBtn.style.display = (tab === 'wishlist' || tab === 'birthdays') ? 'none' : '';
+    }
   });
 });
 
@@ -903,6 +915,9 @@ function renderDates() {
 
 renderMonthButtons();
 
+// Render defaults immediately so page isn't blank while Firebase loads
+renderAll();
+
 // ═══ WISHLIST ═══
 function renderWishlist() {
   const list = document.getElementById('wishList');
@@ -998,21 +1013,42 @@ function editBirthdays() {
 // Initial render (Firebase listener above will update with live data)
 dataRef.once('value').then((snapshot) => {
   const val = snapshot.val();
+  const defaults = getDefaultData();
+  
   if (val) {
     data = val;
-    // Only fill in defaults if fields are completely missing (not if they're empty arrays from user clearing)
-    const defaults = getDefaultData();
-    if (!data.hasOwnProperty('wishlist')) data.wishlist = defaults.wishlist;
-    if (!data.hasOwnProperty('birthdays')) data.birthdays = defaults.birthdays;
-    if (!data.hasOwnProperty('suggestions')) data.suggestions = [];
-    if (!data.hasOwnProperty('tasks')) data.tasks = [];
-    if (!data.hasOwnProperty('rsvp')) data.rsvp = {};
-    if (!data.hasOwnProperty('availability')) data.availability = {};
+    // Firebase converts arrays to objects — fix them
+    if (data.suggestions && !Array.isArray(data.suggestions)) data.suggestions = Object.values(data.suggestions);
+    if (data.tasks && !Array.isArray(data.tasks)) data.tasks = Object.values(data.tasks);
+    if (data.wishlist && !Array.isArray(data.wishlist)) data.wishlist = Object.values(data.wishlist);
+    if (data.birthdays && !Array.isArray(data.birthdays)) data.birthdays = Object.values(data.birthdays);
   } else {
-    // First time — push defaults to Firebase
-    data = getDefaultData();
-    dataRef.set(data);
+    data = {};
   }
+
+  // Always ensure these exist
+  if (!data.suggestions || !data.suggestions.length) data.suggestions = [];
+  if (!data.tasks) data.tasks = [];
+  if (!data.rsvp) data.rsvp = {};
+  if (!data.availability) data.availability = {};
+  
+  // Wishlist: merge defaults so they're always present
+  if (!data.wishlist || !data.wishlist.length) {
+    data.wishlist = defaults.wishlist;
+  } else {
+    const existingIds = data.wishlist.map(w => w.id);
+    defaults.wishlist.forEach(dw => {
+      if (!existingIds.includes(dw.id)) data.wishlist.push(dw);
+    });
+  }
+  
+  // Birthdays: restore if missing
+  if (!data.birthdays || !data.birthdays.length) {
+    data.birthdays = defaults.birthdays;
+  }
+
+  // Save back to Firebase
+  dataRef.set(data);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   renderAll();
 });
