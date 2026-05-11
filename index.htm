@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ Girly Pops Social</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal: #0d9488;
+      --teal-light: #14b8a6;
+      --teal-glow: rgba(13, 148, 136, 0.3);
+      --gold: #d4a853;
+      --pink: #e879a8;
+      --dark: #0f1419;
+      --card-bg: rgba(15, 20, 25, 0.93);
+      --card-border: rgba(13, 148, 136, 0.25);
+      --text: #f0f0f0;
+      --text-muted: #9ca3af;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      background: var(--dark);
+    }
+
+    .bg-photo {
+      display: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 8.5rem 1rem 2rem;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0 0 20px 20px;
+      margin-bottom: 0.5rem;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('group-bg.jpg') center center / cover no-repeat;
+      opacity: 0.4;
+      z-index: 0;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 70%;
+      background: linear-gradient(to top, var(--dark), transparent);
+      z-index: 0;
+    }
+    header h1, header p, #userBadge { position: relative; z-index: 1; }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-style: italic;
+      font-weight: 800;
+      color: var(--teal-light);
+      text-shadow: 0 0 30px var(--teal-glow);
+      letter-spacing: 1px;
+    }
+    header p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    #userBadge {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--gold);
+    }
+    #userBadge a { color: var(--pink); text-decoration: underline; font-size: 0.8rem; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .tab-btn {
+      padding: 0.6rem 1.2rem;
+      border: 1.5px solid var(--card-border);
+      border-radius: 25px;
+      background: var(--card-bg);
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { border-color: var(--teal); color: var(--teal-light); }
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--teal), #0f766e);
+      color: white;
+      border-color: transparent;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--teal); }
+    .card h3 {
+      font-size: 1.05rem;
+      color: var(--teal-light);
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+    .card p { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* Forms */
+    input, textarea, select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      background: rgba(20, 25, 30, 0.95);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 0.5rem;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--teal-light); box-shadow: 0 0 0 3px var(--teal-glow); }
+    textarea { resize: vertical; min-height: 70px; }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(135deg, var(--teal), #0f766e);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: scale(1.03); box-shadow: 0 4px 15px var(--teal-glow); }
+    .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.8rem; }
+    .btn-vote {
+      background: rgba(13, 148, 136, 0.15);
+      color: var(--teal-light);
+      border: 1.5px solid var(--teal);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .btn-vote:hover { background: var(--teal); color: white; }
+    .btn-vote.voted { background: var(--teal); color: white; border-color: var(--teal-light); }
+
+    /* Suggestion cards */
+    .suggestion-card {
+      background: rgba(13, 148, 136, 0.05);
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      transition: border-color 0.2s;
+    }
+    .suggestion-card:hover { border-color: var(--teal); }
+    .suggestion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.4rem;
+    }
+    .suggestion-header h4 { font-size: 1rem; color: var(--text); }
+    .suggestion-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .suggestion-meta .date-tag {
+      background: rgba(212, 168, 83, 0.15);
+      color: var(--gold);
+      padding: 0.1rem 0.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.73rem;
+    }
+    .suggestion-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+    .suggestion-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .voter-list {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    /* RSVP */
+    .rsvp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .rsvp-person {
+      padding: 0.6rem;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1.5px solid var(--card-border);
+      background: rgba(20,25,30,0.8);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .rsvp-person.going { background: rgba(13,148,136,0.2); border-color: var(--teal); color: var(--teal-light); }
+    .rsvp-person.maybe { background: rgba(212,168,83,0.2); border-color: var(--gold); color: var(--gold); }
+    .rsvp-person.cant { background: rgba(232,121,168,0.2); border-color: var(--pink); color: var(--pink); }
+    .rsvp-status { font-size: 0.7rem; display: block; margin-top: 0.2rem; opacity: 0.7; }
+
+    /* Tasks */
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(13,148,136,0.12);
+    }
+    .task-item:last-child { border-bottom: none; }
+    .task-check {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .task-check.done { background: var(--teal); }
+    .task-text { font-size: 0.88rem; flex: 1; }
+    .task-text.done { text-decoration: line-through; color: var(--text-muted); }
+    .task-assignee {
+      font-size: 0.73rem;
+      background: rgba(212,168,83,0.15);
+      color: var(--gold);
+      padding: 0.15rem 0.5rem;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    /* Wishlist */
+    .wish-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(13,148,136,0.12);
+    }
+    .wish-item:last-child { border-bottom: none; }
+    .wish-text { font-size: 0.88rem; flex: 1; }
+    .wish-by { font-size: 0.73rem; color: var(--text-muted); margin: 0 0.5rem; }
+    .btn-promote {
+      font-size: 0.72rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 15px;
+      border: 1.5px solid var(--gold);
+      background: rgba(212,168,83,0.1);
+      color: var(--gold);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-promote:hover { background: var(--gold); color: var(--dark); }
+
+    /* Birthdays */
+    .bday-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(13,148,136,0.12);
+    }
+    .bday-item:last-child { border-bottom: none; }
+    .bday-emoji { font-size: 1.5rem; }
+    .bday-info { flex: 1; }
+    .bday-name { font-size: 0.92rem; font-weight: 700; }
+    .bday-date { font-size: 0.8rem; color: var(--text-muted); }
+    .bday-countdown {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    .bday-countdown.soon { background: rgba(232,121,168,0.2); color: var(--pink); }
+    .bday-countdown.later { background: rgba(13,148,136,0.15); color: var(--teal-light); }
+
+    /* Task due date */
+    .task-due {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: rgba(13,148,136,0.1);
+      padding: 0.1rem 0.4rem;
+      border-radius: 8px;
+    }
+    .task-due.overdue { background: rgba(232,121,168,0.2); color: var(--pink); }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 2.2rem; }
+      .tabs { gap: 0.3rem; }
+      .tab-btn { padding: 0.5rem 0.8rem; font-size: 0.78rem; }
+      .suggestion-header { flex-direction: column; gap: 0.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+
+<div class="container">
+  <header>
+    <h1>✨ Girly Pops Social ✨</h1>
+    <p>suggest it. vote on it. make it happen.</p>
+    <div id="userBadge"></div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="wishlist">🌟 Wishlist</button>
+    <button class="tab-btn" data-tab="suggestions">💡 Suggestions</button>
+    <button class="tab-btn" data-tab="rsvp">💌 RSVP</button>
+    <button class="tab-btn" data-tab="tasks">✅ Tasks</button>
+    <button class="tab-btn" data-tab="birthdays">🎂 Birthdays</button>
+  </div>
+
+  <!-- SUGGESTIONS -->
+  <div class="section" id="suggestions">
+    <div class="card">
+      <h3>💡 Make a Suggestion</h3>
+      <p>Pitch an activity, pick a date, add details — then we vote</p>
+      <div style="margin-top:0.75rem;">
+        <input type="text" id="sugTitle" placeholder="What are we doing? (e.g. Rooftop brunch 🥂)">
+        <div style="display:flex;gap:0.5rem;">
+          <input type="date" id="sugDate" style="flex:1;">
+          <select id="sugTime" style="flex:1;">
+            <option value="">Time (optional)</option>
+            <option value="08:00">08:00</option>
+            <option value="08:30">08:30</option>
+            <option value="09:00">09:00</option>
+            <option value="09:30">09:30</option>
+            <option value="10:00">10:00</option>
+            <option value="10:30">10:30</option>
+            <option value="11:00">11:00</option>
+            <option value="11:30">11:30</option>
+            <option value="12:00">12:00</option>
+            <option value="12:30">12:30</option>
+            <option value="13:00">13:00</option>
+            <option value="13:30">13:30</option>
+            <option value="14:00">14:00</option>
+            <option value="14:30">14:30</option>
+            <option value="15:00">15:00</option>
+            <option value="15:30">15:30</option>
+            <option value="16:00">16:00</option>
+            <option value="16:30">16:30</option>
+            <option value="17:00">17:00</option>
+            <option value="17:30">17:30</option>
+            <option value="18:00">18:00</option>
+            <option value="18:30">18:30</option>
+            <option value="19:00">19:00</option>
+            <option value="19:30">19:30</option>
+            <option value="20:00">20:00</option>
+            <option value="20:30">20:30</option>
+            <option value="21:00">21:00</option>
+            <option value="21:30">21:30</option>
+            <option value="22:00">22:00</option>
+            <option value="22:30">22:30</option>
+            <option value="23:00">23:00</option>
+            <option value="23:30">23:30</option>
+          </select>
+        </div>
+        <input type="text" id="sugLocation" placeholder="Where? (optional)">
+        <textarea id="sugDetails" placeholder="Details, links, vibes... (optional)"></textarea>
+        <button class="btn" onclick="addSuggestion()">Submit Suggestion 🔥</button>
+      </div>
+      <div id="notifyBar" style="display:none;margin-top:0.75rem;padding:0.75rem;background:rgba(13,148,136,0.1);border:1.5px solid var(--teal);border-radius:10px;"></div>
+    </div>
+    <div id="suggestionList"></div>
+  </div>
+
+  <!-- WISHLIST -->
+  <div class="section active" id="wishlist">
+    <div class="card">
+      <h3>🌟 Girly Pop Wishlist</h3>
+      <p>Drop ideas here for someday — when we're ready, promote one to a real suggestion!</p>
+      <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+        <input type="text" id="wishInput" placeholder="Something we should do eventually...">
+        <button class="btn btn-sm" onclick="addWish()">Add</button>
+      </div>
+    </div>
+    <div class="card" id="wishList"></div>
+  </div>
+
+  <!-- TASKS -->
+  <div class="section" id="tasks">
+    <div class="card">
+      <h3>✅ To-Do List</h3>
+      <p>Assign tasks so nobody flakes</p>
+      <div style="margin-top:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <input type="text" id="taskInput" placeholder="What needs to get done?" style="flex:2;min-width:180px;">
+        <input type="text" id="taskAssignee" placeholder="Assign to..." style="flex:1;min-width:100px;">
+        <input type="date" id="taskDue" style="flex:1;min-width:130px;">
+        <button class="btn btn-sm" onclick="addTask()">Add</button>
+      </div>
+    </div>
+    <div class="card" id="taskList"></div>
+  </div>
+
+  <!-- BIRTHDAYS -->
+  <div class="section" id="birthdays">
+    <div class="card">
+      <h3>🎂 Birthdays</h3>
+      <p>Never forget a girly pop's birthday</p>
+      <div id="birthdayList"></div>
+    </div>
+  </div>
+
+  <!-- RSVP -->
+  <div class="section" id="rsvp">
+    <div class="card">
+      <h3>💌 RSVP to an Event</h3>
+      <p>Pick a suggestion and let us know if you're in</p>
+      <select id="rsvpEventSelect" onchange="renderRSVP()" style="margin-top:0.5rem;">
+        <option value="">— Select an event —</option>
+      </select>
+      <div class="rsvp-grid" id="rsvpGrid" style="margin-top:0.75rem;"></div>
+    </div>
+
+    <div class="card">
+      <h3>📅 When Are You Free?</h3>
+      <p>Click dates you're available so we can find a day that works</p>
+      <div style="display:flex;gap:0.4rem;margin-top:0.75rem;flex-wrap:wrap;justify-content:center;" id="monthBtns"></div>
+      <div style="text-align:center;margin-top:0.6rem;font-size:0.95rem;font-weight:700;color:var(--teal-light);" id="monthLabel"></div>
+      <div id="dateGrid" style="margin-top:0.75rem;display:flex;flex-direction:column;gap:0.4rem;"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>✨ girly pops social — because group chats aren't enough ✨</p>
+    <p style="margin-top:0.5rem;font-size:0.7rem;opacity:0.5;">© 2026 Nataeshia Hall. All rights reserved.</p>
+    <button class="btn btn-sm admin-only" style="margin-top:0.75rem;opacity:0.4;font-size:0.7rem;" onclick="resetAll()">Reset Everything</button>
+  </footer>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+// ═══ FIREBASE ═══
+const firebaseConfig = {
+  apiKey: "AIzaSyC9BU-WBe_vgE3VXu3es3QGlkXzoQGaqH4",
+  authDomain: "girlypopssocial.firebaseapp.com",
+  databaseURL: "https://girlypopssocial-default-rtdb.firebaseio.com",
+  projectId: "girlypopssocial",
+  storageBucket: "girlypopssocial.firebasestorage.app",
+  messagingSenderId: "350054211872",
+  appId: "1:350054211872:web:0b1541f580a2de52227745"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const dataRef = db.ref('appData');
+
+// ═══ DATA ═══
+const STORAGE_KEY = 'girlypops_social';
+let data = getDefaultData();
+function getDefaultData() {
+  return { suggestions: [], tasks: [], rsvp: {}, availability: {}, wishlist: [
+    { id: 1, text: 'Trapeze', by: 'Nat' },
+    { id: 2, text: 'Starved Rock Hike', by: 'Nat' },
+    { id: 3, text: 'Helicopter Tour', by: 'Nat' },
+    { id: 4, text: 'Paint n Sip', by: 'Nat' },
+    { id: 5, text: 'Beach Yoga', by: 'Nat' },
+    { id: 6, text: 'Chicago Girls Who Walk', by: 'Nat' },
+    { id: 7, text: 'Bowling', by: 'Nat' },
+    { id: 8, text: 'Batting Cages', by: 'Nat' },
+    { id: 9, text: 'Axe Throwing', by: 'Nat' },
+    { id: 10, text: 'Rage Room', by: 'Nat' },
+  ], birthdays: [
+    { name: 'Nat', date: '2000-01-01' },
+    { name: 'Anmol', date: '2000-01-01' },
+    { name: 'Cynthia', date: '2000-01-01' },
+    { name: 'Ayu', date: '2000-01-01' },
+    { name: 'Aska', date: '2000-01-01' },
+    { name: 'Gurjot', date: '2000-01-01' },
+    { name: 'Anjali', date: '2000-01-01' },
+    { name: 'Kayland', date: '2000-01-01' },
+    { name: 'Andrea', date: '2000-01-01' },
+    { name: 'Mayelie', date: '2000-01-01' },
+  ]};
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  dataRef.set(data);
+}
+function resetAll() {
+  if (!isAdmin()) return;
+  if (confirm('Reset everything? All suggestions, votes, and tasks will be cleared.')) {
+    data = getDefaultData();
+    save();
+    renderAll();
+  }
+}
+function renderAll() {
+  renderSuggestions(); renderWishlist(); renderTasks(); populateRSVPDropdown(); renderRSVP(); renderDates(); renderBirthdays();
+}
+
+// Listen for real-time updates from Firebase
+dataRef.on('value', (snapshot) => {
+  const val = snapshot.val();
+  if (val) {
+    data = val;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    renderAll();
+  }
+});
+
+// ═══ USER ═══
+let currentUser = localStorage.getItem('girlypops_user') || '';
+const ADMIN_NAME = 'Nat';
+function isAdmin() { return currentUser.toLowerCase() === ADMIN_NAME.toLowerCase(); }
+function promptUser() {
+  while (!currentUser.trim()) {
+    currentUser = prompt('✨ Who are you? Type your name:') || '';
+  }
+  currentUser = currentUser.trim();
+  localStorage.setItem('girlypops_user', currentUser);
+  const adminBadge = isAdmin() ? ' · <span style="color:var(--pink);font-size:0.75rem;">👑 Admin</span>' : '';
+  document.getElementById('userBadge').innerHTML = `Hey, <strong>${currentUser}</strong>${adminBadge} · <a href="#" onclick="switchUser()">Not you?</a>`;
+  updateAdminUI();
+}
+function switchUser() {
+  localStorage.removeItem('girlypops_user');
+  currentUser = '';
+  promptUser();
+  renderSuggestions(); renderTasks(); renderWishlist();
+}
+function updateAdminUI() {
+  document.querySelectorAll('.admin-only').forEach(el => {
+    el.style.display = isAdmin() ? '' : 'none';
+  });
+}
+promptUser();
+
+// ═══ TABS ═══
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById(this.dataset.tab).classList.add('active');
+  });
+});
+
+// ═══ SUGGESTIONS ═══
+function renderSuggestions() {
+  const list = document.getElementById('suggestionList');
+  if (!data.suggestions.length) {
+    list.innerHTML = '<div class="card" style="text-align:center;color:var(--text-muted);">No suggestions yet — be the first to pitch something! 💡</div>';
+    return;
+  }
+  const sorted = [...data.suggestions].sort((a, b) => b.voters.length - a.voters.length);
+  list.innerHTML = sorted.map(s => {
+    const hasVoted = s.voters.includes(currentUser);
+    const dateLabel = s.date ? new Date(s.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : '';
+    return `
+    <div class="suggestion-card">
+      <div class="suggestion-header">
+        <h4>${s.title}</h4>
+        <button class="btn-vote ${hasVoted?'voted':''}" onclick="voteSuggestion(${s.id})">
+          ${hasVoted?'✓ Voted':'👍 Vote'} · ${s.voters.length}
+        </button>
+      </div>
+      <div class="suggestion-meta">
+        Suggested by <strong>${s.by}</strong>
+        ${dateLabel ? ` · <span class="date-tag">📅 ${dateLabel}</span>` : ''}
+        ${s.time ? ` · 🕐 ${s.time}` : ''}
+        ${s.location ? ` · 📍 ${s.location}` : ''}
+      </div>
+      ${s.details ? `<div class="suggestion-desc">${s.details}</div>` : ''}
+      <div class="suggestion-footer">
+        <span class="voter-list">${s.voters.length ? '✨ ' + s.voters.join(', ') : 'No votes yet'}</span>
+        <div class="admin-only" style="display:${isAdmin()?'flex':'none'};gap:0.3rem;">
+          <button class="btn-sm" style="background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:15px;font-size:0.7rem;padding:0.2rem 0.5rem;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="editSuggestion(${s.id})">✏️ Edit</button>
+          <button class="btn-sm" style="background:transparent;border:1px solid var(--pink);color:var(--pink);border-radius:15px;font-size:0.7rem;padding:0.2rem 0.5rem;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="deleteSuggestion(${s.id})">🗑️ Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addSuggestion() {
+  const title = document.getElementById('sugTitle').value.trim();
+  if (!title) return;
+  const s = {
+    id: Date.now(),
+    title,
+    date: document.getElementById('sugDate').value || null,
+    time: document.getElementById('sugTime').value.trim() || null,
+    location: document.getElementById('sugLocation').value.trim() || null,
+    details: document.getElementById('sugDetails').value.trim() || null,
+    by: currentUser,
+    voters: []
+  };
+  data.suggestions.push(s);
+  document.getElementById('sugTitle').value = '';
+  document.getElementById('sugDate').value = '';
+  document.getElementById('sugTime').value = '';
+  document.getElementById('sugLocation').value = '';
+  document.getElementById('sugDetails').value = '';
+  save(); renderSuggestions(); populateRSVPDropdown();
+  showNotifyPrompt(s.title);
+}
+
+function showNotifyPrompt(title) {
+  const siteUrl = window.location.href;
+  const msg = `✨ New suggestion on Girly Pops Social!\n\n"${title}" — go vote!\n\n${siteUrl}`;
+  const notify = document.getElementById('notifyBar');
+  notify.style.display = '';
+  notify.innerHTML = `
+    <span style="font-size:0.85rem;">📲 Let the girls know?</span>
+    <div style="display:flex;gap:0.4rem;margin-top:0.4rem;flex-wrap:wrap;">
+      <button class="btn btn-sm" onclick="copyNotify()">📋 Copy message</button>
+      <button class="btn btn-sm" style="background:linear-gradient(135deg,#25D366,#128C7E);" onclick="shareWhatsApp()">💬 WhatsApp</button>
+      <button class="btn btn-sm" style="background:linear-gradient(135deg,#5865F2,#4752C4);" onclick="shareSMS()">📱 Text</button>
+      <button class="btn btn-sm" style="background:transparent;border:1px solid var(--text-muted);color:var(--text-muted);" onclick="dismissNotify()">Nah</button>
+    </div>
+  `;
+  window._notifyMsg = msg;
+}
+
+function copyNotify() {
+  navigator.clipboard.writeText(window._notifyMsg).then(() => {
+    const notify = document.getElementById('notifyBar');
+    notify.innerHTML = '<span style="color:var(--teal-light);font-size:0.85rem;">✓ Copied! Paste it in the group chat 💅</span>';
+    setTimeout(dismissNotify, 2000);
+  });
+}
+
+function shareWhatsApp() {
+  window.open('https://wa.me/?text=' + encodeURIComponent(window._notifyMsg), '_blank');
+  dismissNotify();
+}
+
+function shareSMS() {
+  window.open('sms:?&body=' + encodeURIComponent(window._notifyMsg), '_blank');
+  dismissNotify();
+}
+
+function dismissNotify() {
+  document.getElementById('notifyBar').style.display = 'none';
+}
+
+function voteSuggestion(id) {
+  const s = data.suggestions.find(x => x.id === id);
+  if (!s) return;
+  if (s.voters.includes(currentUser)) {
+    s.voters = s.voters.filter(v => v !== currentUser);
+  } else {
+    s.voters.push(currentUser);
+  }
+  save(); renderSuggestions();
+}
+
+function deleteSuggestion(id) {
+  if (!isAdmin()) return;
+  if (!confirm('Delete this suggestion?')) return;
+  data.suggestions = data.suggestions.filter(x => x.id !== id);
+  save(); renderSuggestions();
+}
+
+function editSuggestion(id) {
+  if (!isAdmin()) return;
+  const s = data.suggestions.find(x => x.id === id);
+  if (!s) return;
+  const newTitle = prompt('Edit title:', s.title);
+  if (newTitle === null) return;
+  s.title = newTitle.trim() || s.title;
+  const newDetails = prompt('Edit details (or leave blank):', s.details || '');
+  if (newDetails !== null) s.details = newDetails.trim() || null;
+  save(); renderSuggestions();
+}
+
+// ═══ TASKS ═══
+function renderTasks() {
+  const list = document.getElementById('taskList');
+  if (!data.tasks.length) {
+    list.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:0.88rem;">No tasks yet — assign something! ✅</div>';
+    return;
+  }
+  const today = new Date(); today.setHours(0,0,0,0);
+  list.innerHTML = data.tasks.map(t => {
+    let dueHTML = '';
+    if (t.due) {
+      const dueDate = new Date(t.due + 'T12:00:00');
+      const label = dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const overdue = dueDate < today && !t.done;
+      dueHTML = `<span class="task-due ${overdue?'overdue':''}">📅 ${label}${overdue?' (overdue!)':''}</span>`;
+    }
+    return `
+    <div class="task-item">
+      <div class="task-check ${t.done?'done':''}" onclick="toggleTask(${t.id})"></div>
+      <span class="task-text ${t.done?'done':''}">${t.text}</span>
+      ${dueHTML}
+      ${t.assignee ? `<span class="task-assignee">${t.assignee}</span>` : ''}
+      <span class="admin-only" style="display:${isAdmin()?'inline':'none'};cursor:pointer;font-size:0.75rem;" onclick="deleteTask(${t.id})">🗑️</span>
+    </div>`;
+  }).join('');
+}
+
+function addTask() {
+  const input = document.getElementById('taskInput');
+  const assignee = document.getElementById('taskAssignee');
+  const due = document.getElementById('taskDue');
+  if (!input.value.trim()) return;
+  data.tasks.unshift({ id: Date.now(), text: input.value.trim(), assignee: assignee.value.trim() || '', due: due.value || null, done: false });
+  input.value = ''; assignee.value = ''; due.value = '';
+  save(); renderTasks();
+}
+
+function toggleTask(id) {
+  const t = data.tasks.find(x => x.id === id);
+  if (t) { t.done = !t.done; save(); renderTasks(); }
+}
+
+function deleteTask(id) {
+  if (!isAdmin()) return;
+  data.tasks = data.tasks.filter(x => x.id !== id);
+  save(); renderTasks();
+}
+
+// ═══ RSVP ═══
+const friends = ['Nat', 'Anmol', 'Cynthia', 'Ayu', 'Aska', 'Gurjot', 'Anjali', 'Kayland', 'Andrea', 'Mayelie'];
+const rsvpStates = ['', 'going', 'maybe', 'cant'];
+const rsvpLabels = ['Tap to RSVP', '✓ Going!', '~ Maybe', '✗ Can\'t'];
+
+function populateRSVPDropdown() {
+  const select = document.getElementById('rsvpEventSelect');
+  select.innerHTML = '<option value="">— Select an event —</option>';
+  data.suggestions.forEach(s => {
+    select.innerHTML += `<option value="${s.id}">${s.title}</option>`;
+  });
+}
+
+function renderRSVP() {
+  const grid = document.getElementById('rsvpGrid');
+  const eventId = document.getElementById('rsvpEventSelect').value;
+  if (!eventId) {
+    grid.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--text-muted);font-size:0.85rem;grid-column:1/-1;">Pick an event above to RSVP</div>';
+    return;
+  }
+  if (!data.rsvp[eventId]) data.rsvp[eventId] = {};
+  grid.innerHTML = '';
+  friends.forEach(name => {
+    const state = data.rsvp[eventId][name] || 0;
+    const cell = document.createElement('div');
+    cell.className = 'rsvp-person ' + rsvpStates[state];
+    cell.innerHTML = `${name}<span class="rsvp-status">${rsvpLabels[state]}</span>`;
+    cell.addEventListener('click', () => {
+      data.rsvp[eventId][name] = ((data.rsvp[eventId][name] || 0) + 1) % 4;
+      save(); renderRSVP();
+    });
+    grid.appendChild(cell);
+  });
+}
+
+// ═══ AVAILABILITY CALENDAR ═══
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+function getMonthOptions() {
+  const months = [];
+  const now = new Date();
+  for (let i = 0; i < 3; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    months.push({ month: d.getMonth(), year: d.getFullYear(), label: d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) });
+  }
+  return months;
+}
+
+function renderMonthButtons() {
+  const container = document.getElementById('monthBtns');
+  const months = getMonthOptions();
+  container.innerHTML = months.map(m => `
+    <button class="btn btn-sm" onclick="switchMonth(${m.month}, ${m.year})" 
+      style="${m.month === currentMonth && m.year === currentYear ? '' : 'background:transparent;border:1.5px solid var(--teal);color:var(--teal-light);'}">
+      ${m.label}
+    </button>
+  `).join('');
+}
+
+function switchMonth(month, year) {
+  currentMonth = month;
+  currentYear = year;
+  renderMonthButtons();
+  renderDates();
+}
+
+function renderDates() {
+  const grid = document.getElementById('dateGrid');
+  const label = document.getElementById('monthLabel');
+  grid.innerHTML = '';
+
+  const firstDay = new Date(currentYear, currentMonth, 1);
+  const lastDay = new Date(currentYear, currentMonth + 1, 0);
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  label.textContent = firstDay.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  if (!data.availability) data.availability = {};
+
+  for (let day = 1; day <= lastDay.getDate(); day++) {
+    const d = new Date(currentYear, currentMonth, day);
+    const key = d.toISOString().split('T')[0];
+    const isPast = d < today;
+    if (isPast) {
+      const twoDaysAgo = new Date(today);
+      twoDaysAgo.setDate(today.getDate() - 2);
+      if (d < twoDaysAgo) continue;
+    }
+    const freeList = data.availability[key] || [];
+    const iAmFree = freeList.includes(currentUser);
+    const freeCount = freeList.length;
+    const dayLabel = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+    const row = document.createElement('div');
+    row.style.cssText = `display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;border-radius:10px;border:1.5px solid ${iAmFree ? 'var(--teal)' : 'var(--card-border)'};background:${iAmFree ? 'rgba(13,148,136,0.12)' : 'rgba(20,25,30,0.7)'};transition:all 0.2s;${isPast ? 'opacity:0.3;' : 'cursor:pointer;'}`;
+
+    row.innerHTML = `
+      <button style="width:36px;height:36px;border-radius:50%;border:2px solid ${iAmFree ? 'var(--teal-light)' : 'var(--card-border)'};background:${iAmFree ? 'var(--teal)' : 'transparent'};color:${iAmFree ? 'white' : 'var(--text-muted)'};font-size:0.8rem;font-weight:700;cursor:pointer;flex-shrink:0;font-family:'DM Sans',sans-serif;">${iAmFree ? '✓' : ''}</button>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:0.88rem;font-weight:700;color:var(--text);">${dayLabel}</div>
+        <div style="font-size:0.75rem;color:${freeCount ? 'var(--teal-light)' : 'var(--text-muted)'};margin-top:0.1rem;">
+          ${freeCount ? `<strong>${freeCount}/10 free</strong> — ${freeList.join(', ')}` : 'Nobody yet'}
+        </div>
+      </div>
+    `;
+
+    if (!isPast) {
+      row.addEventListener('click', () => {
+        if (!data.availability[key]) data.availability[key] = [];
+        if (data.availability[key].includes(currentUser)) {
+          data.availability[key] = data.availability[key].filter(n => n !== currentUser);
+        } else {
+          data.availability[key].push(currentUser);
+        }
+        save(); renderDates();
+      });
+    }
+    grid.appendChild(row);
+  }
+}
+
+renderMonthButtons();
+
+// ═══ WISHLIST ═══
+function renderWishlist() {
+  const list = document.getElementById('wishList');
+  if (!data.wishlist.length) {
+    list.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:0.88rem;">Wishlist is empty — dream it up! 🌟</div>';
+    return;
+  }
+  list.innerHTML = data.wishlist.map(w => `
+    <div class="wish-item">
+      <span class="wish-text">${w.text}</span>
+      <span class="wish-by">— ${w.by}</span>
+      <button class="btn-promote" onclick="promoteWish(${w.id})">→ Suggest it</button>
+      <span class="admin-only" style="display:${isAdmin()?'inline':'none'};cursor:pointer;font-size:0.75rem;margin-left:0.3rem;" onclick="deleteWish(${w.id})">🗑️</span>
+    </div>
+  `).join('');
+}
+
+function addWish() {
+  const input = document.getElementById('wishInput');
+  if (!input.value.trim()) return;
+  data.wishlist.push({ id: Date.now(), text: input.value.trim(), by: currentUser });
+  input.value = '';
+  save(); renderWishlist();
+}
+
+function promoteWish(id) {
+  const w = data.wishlist.find(x => x.id === id);
+  if (!w) return;
+  // Pre-fill the suggestion form with the wishlist item
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelector('[data-tab="suggestions"]').classList.add('active');
+  document.getElementById('suggestions').classList.add('active');
+  document.getElementById('sugTitle').value = w.text;
+  document.getElementById('sugTitle').focus();
+}
+
+function deleteWish(id) {
+  if (!isAdmin()) return;
+  data.wishlist = data.wishlist.filter(x => x.id !== id);
+  save(); renderWishlist();
+}// ═══ BIRTHDAYS ═══
+function renderBirthdays() {
+  const list = document.getElementById('birthdayList');
+  if (!data.birthdays || !data.birthdays.length) {
+    list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--text-muted);">No birthdays set yet</div>';
+    return;
+  }
+  const today = new Date();
+  const sorted = [...data.birthdays].sort((a, b) => {
+    const nextA = getNextBirthday(a.date);
+    const nextB = getNextBirthday(b.date);
+    return nextA - nextB;
+  });
+  list.innerHTML = sorted.map(b => {
+    const next = getNextBirthday(b.date);
+    const days = Math.ceil((next - today) / (1000 * 60 * 60 * 24));
+    const dateLabel = new Date(b.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    const soon = days <= 30;
+    return `
+    <div class="bday-item">
+      <span class="bday-emoji">🎂</span>
+      <div class="bday-info">
+        <div class="bday-name">${b.name}</div>
+        <div class="bday-date">${dateLabel}</div>
+      </div>
+      <span class="bday-countdown ${soon?'soon':'later'}">${days === 0 ? '🎉 TODAY!' : days + ' days'}</span>
+    </div>`;
+  }).join('');
+  list.innerHTML += `<div style="margin-top:1rem;text-align:center;"><button class="btn btn-sm" onclick="editBirthdays()">✏️ Edit Birthdays</button></div>`;
+}
+
+function getNextBirthday(dateStr) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const parts = dateStr.split('-');
+  let next = new Date(today.getFullYear(), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  if (next < today) next.setFullYear(next.getFullYear() + 1);
+  return next;
+}
+
+function editBirthdays() {
+  const input = prompt('Enter birthdays as: Name:MM-DD (comma separated)\\n\\nExample: Nat:03-15, Anmol:07-22, Cynthia:11-05\\n\\nCurrent: ' + data.birthdays.map(b => b.name + ':' + b.date.slice(5)).join(', '));
+  if (!input) return;
+  const entries = input.split(',').map(e => e.trim()).filter(Boolean);
+  data.birthdays = entries.map(e => {
+    const [name, md] = e.split(':').map(s => s.trim());
+    return { name, date: '2000-' + md };
+  });
+  save(); renderBirthdays();
+}
+
+// ═══ INIT ═══
+// Initial render (Firebase listener above will update with live data)
+dataRef.once('value').then((snapshot) => {
+  const val = snapshot.val();
+  if (val) {
+    data = val;
+  } else {
+    // First time — push defaults to Firebase
+    data = getDefaultData();
+    dataRef.set(data);
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  renderAll();
+});
+</script>
+</body>
+</html>
