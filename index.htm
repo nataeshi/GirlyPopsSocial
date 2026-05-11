@@ -944,7 +944,7 @@ function deleteWish(id) {
 function renderBirthdays() {
   const list = document.getElementById('birthdayList');
   if (!data.birthdays || !data.birthdays.length) {
-    list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--text-muted);">No birthdays set yet</div>';
+    list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--text-muted);">No birthdays set yet</div><div style="margin-top:1rem;text-align:center;"><button class="btn btn-sm" onclick="editBirthdays()">✏️ Edit Birthdays</button></div>';
     return;
   }
   const today = new Date();
