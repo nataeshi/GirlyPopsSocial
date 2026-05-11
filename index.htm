@@ -996,6 +996,15 @@ dataRef.once('value').then((snapshot) => {
   const val = snapshot.val();
   if (val) {
     data = val;
+    // Ensure defaults exist if missing
+    const defaults = getDefaultData();
+    if (!data.wishlist || !data.wishlist.length) data.wishlist = defaults.wishlist;
+    if (!data.birthdays || !data.birthdays.length) data.birthdays = defaults.birthdays;
+    if (!data.suggestions) data.suggestions = [];
+    if (!data.tasks) data.tasks = [];
+    if (!data.rsvp) data.rsvp = {};
+    if (!data.availability) data.availability = {};
+    dataRef.set(data);
   } else {
     // First time — push defaults to Firebase
     data = getDefaultData();
